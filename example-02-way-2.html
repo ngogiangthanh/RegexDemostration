@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 02</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+          <li><a href="example-01.html">Trang 1</a></li>
+          <li><a href="example-02-way-1.html">Trang 2 - Cách 1</a></li>
+          <li><a href="example-02-way-2.html">Trang 2 - Cách 2</a></li>
+        </ul>
+      </nav>
+
+    <form action="register-process.html" method="post" onsubmit="return checkAllData()" autocomplete="on">
+        <table border="0" cellpadding="0" cellspacing="2" align="center">
+            <tr>
+                <th colspan="2" class="header">Register new account</th>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtUsername">Username</label>
+                </td>
+                <td>
+                    <input type="text" name="txtUsername" id="txtUsername" placeholder="Please enter username"
+                        class="input" onblur="checkUsername()" />
+                    <div class="error" id="txtUsernameMessage"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtPassword1">Password</label>
+                </td>
+                <td>
+                    <input type="password" name="txtPassword1" id="txtPassword1" placeholder="Please enter password"
+                        class="input" onblur="checkPassword1()" />
+                    <div class="error" id="txtPassword1Message"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtPassword2">Confirm password</label>
+                </td>
+                <td>
+                    <input type="password" name="txtPassword2" id="txtPassword2" placeholder="Please confirm password"
+                        class="input" onblur="checkPassword2()" />
+                    <div class="error" id="txtPassword2Message"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtEmail">Email</label>
+                </td>
+                <td>
+                    <input type="text" name="txtEmail" id="txtEmail" placeholder="Please enter email" class="input"
+                        onblur="checkEmail()" />
+                    <div class="error" id="txtEmailMessage"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtPhone">Phone</label>
+                </td>
+                <td>
+                    <input type="text" name="txtPhone" id="txtPhone" placeholder="Please enter phone" class="input"
+                        onblur="checkPhone()" />
+                    <div class="error" id="txtPhoneMessage"></div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="footer">
+                    <input type="submit" name="btnRegister" id="btnRegister" class="button" value="Register" />
+                </td>
+            </tr>
+            <tr>
+                <td class="error" colspan="2" id="txtError"></td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+
+        var patt_email = /^[a-zA-Z]+\w*([.-_]\w+)*\@[a-zA-Z]+\w*([.-_]\w+)*(\.\w+)+$/;
+        // Biểu thức chính quy kiểm tra định dạng email.
+        // ^[a-zA-Z]+: Bắt đầu bằng một hoặc nhiều ký tự chữ cái.
+        // \w*: Theo sau là không hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // ([.-_]\w+)*: Theo sau là không hoặc nhiều nhóm: dấu chấm, gạch ngang, hoặc gạch dưới, theo sau bởi một hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // \@: Theo sau là ký tự @.
+        // [a-zA-Z]+: Theo sau là một hoặc nhiều ký tự chữ cái (cho tên miền).
+        // \w*: Theo sau là không hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // ([.-_]\w+)*: Theo sau là không hoặc nhiều nhóm: dấu chấm, gạch ngang, hoặc gạch dưới, theo sau bởi một hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // (\.\w+)+$: Kết thúc bằng một hoặc nhiều nhóm: dấu chấm theo sau bởi một hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới (cho phần tên miền cấp cao như .com, .vn).
+
+        var patt_phone = /^0[1-9]\d{8,10}$/;
+        // Biểu thức chính quy kiểm tra định dạng số điện thoại Việt Nam.
+        // ^0: Bắt đầu bằng số 0.
+        // [1-9]: Theo sau là một chữ số từ 1 đến 9.
+        // \d{8,10}$: Theo sau là 8 đến 10 chữ số và kết thúc chuỗi.
+
+        var errorArray = []; // Mảng để lưu trữ các thông báo lỗi.
+
+        function checkAllData() {
+            // Hàm kiểm tra tất cả dữ liệu trong form.
+            var tk = document.getElementById("txtUsername").value;
+            // Lấy giá trị của trường username.
+            var mk1 = document.getElementById("txtPassword1").value;
+            // Lấy giá trị của trường mật khẩu thứ nhất.
+            var mk2 = document.getElementById("txtPassword2").value;
+            // Lấy giá trị của trường mật khẩu thứ hai (xác nhận).
+            var email = document.getElementById("txtEmail").value;
+            // Lấy giá trị của trường email.
+            var phone = document.getElementById("txtPhone").value;
+            // Lấy giá trị của trường số điện thoại.
+
+            errorArray = []; // Reset mảng lỗi trước mỗi lần kiểm tra.
+
+            if (tk.trim() == "") {
+                // Kiểm tra nếu username bị bỏ trống sau khi loại bỏ khoảng trắng đầu và cuối.
+                errorArray.push("Username can't be empty");
+            }
+
+            if (mk1.length < 6 || mk1.length > 20) {
+                // Kiểm tra nếu độ dài mật khẩu thứ nhất không nằm trong khoảng từ 6 đến 20 ký tự.
+                errorArray.push("Password length must be from 6 to 20 characters");
+            }
+
+            if (mk1 != mk2) {
+                // Kiểm tra nếu mật khẩu thứ nhất và mật khẩu thứ hai không khớp nhau.
+                errorArray.push("Password doesn't match");
+            }
+
+            if (!patt_email.test(email)) {
+                // Kiểm tra nếu định dạng email không hợp lệ bằng cách sử dụng biểu thức chính quy patt_email.
+                errorArray.push("Email is invalid");
+            }
+
+            if (!patt_phone.test(phone)) {
+                // Kiểm tra nếu định dạng số điện thoại không hợp lệ bằng cách sử dụng biểu thức chính quy patt_phone.
+                errorArray.push("Phone number is invalid");
+            }
+
+            var errorMessage = document.getElementById("txtError");
+            // Lấy phần tử HTML để hiển thị thông báo lỗi.
+
+            if (errorArray.length == 0) {
+                // Nếu không có lỗi nào được thêm vào mảng errorArray.
+                errorMessage.innerHTML = "Succesful!";
+                // Hiển thị thông báo thành công.
+                errorMessage.style.color = "#0f0";
+                // Đặt màu chữ thành xanh lá cây.
+                // return true; // Nếu bạn muốn form được submit khi không có lỗi, hãy bỏ comment dòng này.
+                return false; // Hiện tại, form sẽ không được submit dù có lỗi hay không.
+            } else {
+                // Nếu có lỗi trong mảng errorArray.
+                var strMsg = "Please check invalid data : ";
+                strMsg += "<ol>";
+                // Bắt đầu tạo danh sách có thứ tự các lỗi.
+                for (const index in errorArray) {
+                    // Duyệt qua mảng lỗi.
+                    strMsg += "<li>" + errorArray[index] + "</li>";
+                    // Thêm mỗi thông báo lỗi vào một mục danh sách.
+                }
+                strMsg += "</ol>";
+                // Kết thúc danh sách lỗi.
+                errorMessage.innerHTML = strMsg;
+                // Hiển thị danh sách lỗi trong phần tử errorMessage.
+                errorMessage.style.color = "#f00";
+                // Đặt màu chữ thành đỏ.
+                return false; // Ngăn chặn form được submit khi có lỗi.
+            }
+        }
+    </script>
+</body>
+
+</html>

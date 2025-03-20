@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 02</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="example-01.html">Trang 1</a></li>
+            <li><a href="example-02-way-1.html">Trang 2 - Cách 1</a></li>
+            <li><a href="example-02-way-2.html">Trang 2 - Cách 2</a></li>
+        </ul>
+    </nav>
+
+    <form action="register-process.html" method="post" onsubmit="return checkAllData()" autocomplete="on">
+        <table border="0" cellpadding="0" cellspacing="2" align="center">
+            <tr>
+                <th colspan="2" class="header">Register new account</th>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtUsername">Username</label>
+                </td>
+                <td>
+                    <input type="text" name="txtUsername" id="txtUsername" placeholder="Please enter username"
+                        class="input" onblur="checkUsername()" />
+                    <div class="error" id="txtUsernameMessage"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtPassword1">Password</label>
+                </td>
+                <td>
+                    <input type="password" name="txtPassword1" id="txtPassword1" placeholder="Please enter password"
+                        class="input" onblur="checkPassword1()" />
+                    <div class="error" id="txtPassword1Message"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtPassword2">Confirm password</label>
+                </td>
+                <td>
+                    <input type="password" name="txtPassword2" id="txtPassword2" placeholder="Please confirm password"
+                        class="input" onblur="checkPassword2()" />
+                    <div class="error" id="txtPassword2Message"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtEmail">Email</label>
+                </td>
+                <td>
+                    <input type="text" name="txtEmail" id="txtEmail" placeholder="Please enter email" class="input"
+                        onblur="checkEmail()" />
+                    <div class="error" id="txtEmailMessage"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label for="txtPhone">Phone</label>
+                </td>
+                <td>
+                    <input type="text" name="txtPhone" id="txtPhone" placeholder="Please enter phone" class="input"
+                        onblur="checkPhone()" />
+                    <div class="error" id="txtPhoneMessage"></div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="footer">
+                    <input type="submit" name="btnRegister" id="btnRegister" class="button" value="Register" />
+                </td>
+            </tr>
+            <tr>
+                <td class="error" colspan="2" id="txtError"></td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+        var patt_email = /^[a-zA-Z]+\w*([.-_]\w+)*\@[a-zA-Z]+\w*([,-_]\w+)*(\.\w+)+$/;
+        // Biểu thức chính quy kiểm tra định dạng email.
+        // ^[a-zA-Z]+: Bắt đầu bằng một hoặc nhiều ký tự chữ cái.
+        // \w*: Theo sau là không hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // ([.-_]\w+)*: Theo sau là không hoặc nhiều nhóm: dấu chấm, gạch ngang, hoặc gạch dưới, theo sau bởi một hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // \@: Theo sau là ký tự @.
+        // [a-zA-Z]+: Theo sau là một hoặc nhiều ký tự chữ cái (cho tên miền).
+        // \w*: Theo sau là không hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới.
+        // ([,-_]\w+)*: Theo sau là không hoặc nhiều nhóm: dấu phẩy, gạch ngang, hoặc gạch dưới, theo sau bởi một hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới (lưu ý: có vẻ có lỗi đánh máy ở đây, có thể là [.-_] thay vì [,-_]).
+        // (\.\w+)+$: Kết thúc bằng một hoặc nhiều nhóm: dấu chấm theo sau bởi một hoặc nhiều ký tự chữ và số hoặc dấu gạch dưới (cho phần tên miền cấp cao như .com, .vn).
+
+        var patt_phone = /^0[1-9]\d{8,10}$/;
+        // Biểu thức chính quy kiểm tra định dạng số điện thoại Việt Nam.
+        // ^0: Bắt đầu bằng số 0.
+        // [1-9]: Theo sau là một chữ số từ 1 đến 9.
+        // \d{8,10}$: Theo sau là 8 đến 10 chữ số và kết thúc chuỗi.
+
+        var errorMessage; // Biến để lưu trữ thông báo lỗi (hiện tại không được sử dụng).
+
+        function checkUsername() {
+            // Hàm kiểm tra tính hợp lệ của tên người dùng.
+            tk = document.getElementById("txtUsername").value.trim();
+            // Lấy giá trị từ ô input có ID là "txtUsername", loại bỏ khoảng trắng ở đầu và cuối.
+
+            document.getElementById("txtUsernameMessage").innerHTML =
+                tk == "" ? "Username can't be empty" : "";
+            // Nếu giá trị tk rỗng, hiển thị thông báo lỗi trong phần tử có ID là "txtUsernameMessage".
+
+            return (tk != "") ? true : false;
+            // Trả về true nếu tk không rỗng, ngược lại trả về false.
+        }
+
+        function checkPassword1() {
+            // Hàm kiểm tra tính hợp lệ của mật khẩu thứ nhất.
+            mk1 = document.getElementById("txtPassword1").value;
+            // Lấy giá trị từ ô input có ID là "txtPassword1".
+            document.getElementById("txtPassword1Message").innerHTML =
+                (mk1.length < 6 || mk1.length > 20) ?
+                    // Kiểm tra nếu độ dài mật khẩu nhỏ hơn 6 hoặc lớn hơn 20.
+
+                    "Password length must be from 6 to 20 characters" : "";
+            // Nếu điều kiện trên đúng, hiển thị thông báo lỗi.
+
+            return (mk1.length >= 6 && mk1.length <= 20);
+            // Trả về true nếu độ dài mật khẩu nằm trong khoảng từ 6 đến 20, ngược lại trả về false.
+        }
+
+        function checkPassword2() {
+            // Hàm kiểm tra xem mật khẩu thứ hai có trùng khớp với mật khẩu thứ nhất không.
+            mk1 = document.getElementById("txtPassword1").value;
+            // Lấy giá trị từ ô input có ID là "txtPassword1".
+            mk2 = document.getElementById("txtPassword2").value;
+            // Lấy giá trị từ ô input có ID là "txtPassword2".
+            document.getElementById("txtPassword2Message").innerHTML =
+                (mk1 != mk2) ? "Password doesn't match" : "";
+            // Nếu mk1 không bằng mk2, hiển thị thông báo lỗi.
+            return (mk1 == mk2);
+            // Trả về true nếu mk1 bằng mk2, ngược lại trả về false.
+        }
+
+        function checkEmail() {
+            // Hàm kiểm tra tính hợp lệ của địa chỉ email.
+            email = document.getElementById("txtEmail").value;
+            // Lấy giá trị từ ô input có ID là "txtEmail".
+            document.getElementById("txtEmailMessage").innerHTML =
+
+                patt_email.test(email) == false ? "Email is invalid" : "";
+            // Sử dụng biểu thức chính quy patt_email để kiểm tra định dạng email.
+            // Nếu không khớp, hiển thị thông báo lỗi.
+            return patt_email.test(email);
+            // Trả về true nếu email khớp với biểu thức chính quy, ngược lại trả về false.
+        }
+    </script>
+</body>
+
+</html>
